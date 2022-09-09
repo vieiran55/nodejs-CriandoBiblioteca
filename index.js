@@ -6,6 +6,7 @@ const fs = require('fs');
 
 // aqui criamos uma função de regex, que vai extrair do texto as ocorrencias de [], (), https e tex
 function extraiLinks(texto){
+  // podemos utilizar o site REGEX101.com para testar combinações
   const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s]*.[^\s]*)\)/gm;
   //criamos uma array vazio para após executar a função salvarmos o que foi extraido pelo regex
   const arrayResultados = [];
@@ -16,7 +17,8 @@ function extraiLinks(texto){
     //utilizando o metodo .push para fazer um novo array
     arrayResultados.push({ [temp [1]]: temp[2]})
   }
- return (arrayResultados);
+  // aqui criamos uma condicional para verificar se vai haver algum item no array
+ return arrayResultados.length === 0 ? 'não há links' : arrayResultados;
 }
 
 
@@ -34,7 +36,7 @@ async function pegaArquivo(caminhoDoArquivo){
   // olha temos um await dentro do rsultado
   const texto = await fs.promises.readFile(caminhoDoArquivo, encoding)
     //passamos aqui a função do regex para jogar na tela
-  console.log(extraiLinks(texto))
+  return (extraiLinks(texto))
   } catch (erro){
     trataErro(erro)
   } finally {
@@ -71,4 +73,9 @@ async function pegaArquivo(caminhoDoArquivo){
 // }
 
 // aqui declaramos o caminho do arquivo.
-pegaArquivo('./arquivos/texto1.md');
+//pegaArquivo('./arquivos/texto1.md');
+
+module.exports = pegaArquivo
+
+
+// inserimos o comando diretamente no package.json para nao ser rechamado todas as vezes  => npm run cli
